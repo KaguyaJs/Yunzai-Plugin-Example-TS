@@ -1,0 +1,89 @@
+name: 🚀 构建并推送到分支
+
+on:
+  push:
+    branches:
+      - main # 只有 main 分支有新的 push 时才触发
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # 必须设置此权限，才能允许 Actions 往仓库推送内容
+
+    steps:
+      - name: 📥 检出 Yunzai 源码
+        uses: actions/checkout@v5
+        with:
+          repository: KaguyaJs/TRSS-Yunzai
+
+      # 1. 检出 main 分支代码 (包括完整历史记录)
+      - name: 📂 检出插件代码（plugins/temp-plugin）
+        uses: actions/checkout@v5
+        with:
+          path: plugins/temp-plugin
+          fetch-depth: 0
+
+      # 2. 设置 Node.js 环境
+      - name: ⚙️ 设置 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      # 3. 安装 pnpm
+      - name: 📦 配置 pnpm 并安装依赖
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: |
+            - args: ["--registry=https://registry.npmjs.org"]
+
+      # 4. 运行构建命令
+      - name: 🛠️ 执行构建（pnpm run build）
+        run: |
+          cd plugins/temp-plugin
+          pnpm run build
+
+      # 5. 准备要提交到 lib 分支的文件
+      - name: 📁 准备发布所需文件
+        run: |
+          cd plugins/temp-plugin
+
+          mkdir -p temp_lib_content
+
+          for f in $(jq -r '.files[]' package.json); do
+            if [ -e "$f" ]; then
+              dest="temp_lib_content/$f"
+              mkdir -p "$(dirname "$dest")"
+              cp -R "$f" "$dest"
+              echo "[copy] $f"
+            else
+              echo "[skip] $f not exists"
+            fi
+          done
+
+          echo "node_modules/" > temp_lib_content/.gitignore
+
+      # 删除开发依赖避免用户安装开发依赖增加体积
+      - name: 🧹 移除开发依赖（减小发布体积）
+        run: |
+          cd plugins/temp-plugin/temp_lib_content
+          pnpm pkg delete devDependencies
+
+      # 6. 推送构建产物到 lib 分支 (使用 actions-gh-pages)
+      - name: 📤 推送到 lib 分支
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          # 这是 GitHub 默认提供的 Token，具有写入权限
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # 要推送到的目标分支
+          publish_branch: lib
+          # 包含要推送文件/目录的文件夹
+          publish_dir: plugins/temp-plugin/temp_lib_content
+          # 每次提交时保留历史记录
+          force_orphan: false
+          # 自定义提交信息
+          full_commit_message: ${{ github.event.head_commit.message }}
+          # 如果你希望自定义提交用户名/邮箱，可以取消下面两行注释并修改
+          # user_name: "github-actions[bot]"
+          # user_email: "github-actions[bot]@users.noreply.github.com"

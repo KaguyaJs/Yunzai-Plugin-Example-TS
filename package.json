@@ -1,0 +1,35 @@
+{
+  "name": "yunzai-plugin-example",
+  "version": "1.0.0",
+  "description": "Yunzai插件开发模板",
+  "keywords": [
+    "Yunzai"
+  ],
+  "license": "GPL-3.0-only",
+  "author": "DengFengLai",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && tsc-alias"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/lodash": "^4.17.23",
+    "@types/node": "^24.10.9",
+    "@types/trss-yunzai": "npm:@kaguyajs/trss-yunzai-types@^1.3.2",
+    "eslint": "^9.39.2",
+    "neostandard": "^0.12.2",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "files": [
+    "./lib",
+    "./resources",
+    "./README.md",
+    "./index.js",
+    "./LICENSE"
+  ]
+}
