@@ -31,12 +31,11 @@ yunzai-plugin-example/
   │ │── modules/            -> 其他模块
   │ │   └── loader/         -> 插件载入模块
   │ ├── types/              -> 类型声明
-  │ │   └── Config.ts       -> 配置文件的类型声明 (影响schema生成)
+  │ │   └── Config.ts       -> 配置文件的类型声明
   │ ├── index.ts            -> 入口文件
   │ └── dir.ts              -> 路径管理
   │ 
   ├── lib/                  -> 输出目录
-  ├── schema/               -> 生成的配置json schema
   ├── resources/            -> 资源目录
   │ └── config/
   │   └── config.json       -> 默认配置文件
