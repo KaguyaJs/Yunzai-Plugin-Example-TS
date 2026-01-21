@@ -1,7 +1,0 @@
-{
-  "$schema": "../../schema/config.schema.json",
-  "test": {
-    "name": "张三",
-    "age": 18
-  }
-}
