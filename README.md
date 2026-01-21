@@ -40,9 +40,8 @@ yunzai-plugin-example/
   ├── resources/            -> 资源目录
   │ └── config/
   │   └── config.json       -> 默认配置文件
-  ├── index.js              -> Yunzai兼容入口
+  ├── index.js              -> Yunzai入口文件
   ├── tsconfig.json         -> ts配置
-  ├── tsup.config.ts        -> 打包器配置
   ├── eslint.config.js      -> ESLint规则配置
   ├── package.json
   └── README.md
